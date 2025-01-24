@@ -56,6 +56,27 @@ qqline(EPI.old)
 qqplot(rt(250, df = 5), EPI.old, xlab = "Q-Q plot for t dsn") 
 qqline(EPI.old)
 
+#EPI Old
+NAs <- is.na(EPI.old)
+EPI.old.noNAs <- EPI.old[!NAs]
+
+summary(EPI.old) 
+
+plot(ecdf(EPI.old), do.points=FALSE, verticals=TRUE) 
+
+qqnorm(EPI.old)
+qqline(EPI.old) 
+qqplot(rnorm(250), EPI.old, xlab = "Q-Q plot for norm dsn") 
+qqline(EPI.old)
+qqplot(rt(250, df = 5), EPI.old, xlab = "Q-Q plot for t dsn") 
+qqline(EPI.old)
+
+hist(EPI.old, prob=TRUE)
+lines(density(EPI.old,na.rm=TRUE,bw="SJ")) 
+
+
+
+
 
 
 
