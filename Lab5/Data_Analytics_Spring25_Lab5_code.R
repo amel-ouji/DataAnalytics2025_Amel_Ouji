@@ -78,3 +78,7 @@ svr.outs <- data.frame(real=log10(dataset$PRICE), pred=svr.pred)
 ggplot(svr.outs, aes(x = real, y = pred)) +
   geom_point() +
   stat_smooth(method = "lm")
+
+#NYC Housing Data
+
+nyc_data <- read.csv("C:/Users/oujia/Downloads/NYC_Citywide_Annualized_Calendar_Sales_Update_20241107 (1).csv")
