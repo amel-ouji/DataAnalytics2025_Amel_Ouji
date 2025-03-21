@@ -4,12 +4,13 @@ library(e1071)
 library(caret)
 
 ## read data
-NY_House_Dataset <- read_csv("Courses/Data Analytics/Fall24/assignments/NY-House-Dataset.csv")
+url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data"
+dataset <- read.csv(url, header = TRUE)
 
-dataset <- NY_House_Dataset
 
-# dataset <- wine
-# dataset$Type <- as.factor(dataset$Type)
+dataset$Type <- as.factor(dataset$Type)
+
+
 
 ## column names
 names(dataset)
@@ -24,10 +25,10 @@ x <- dataset[,2:4]
 y <- as.factor(as.matrix(dataset[,1]))
 
 ## feature boxplots
-boxplot(X, main="iris features")
+boxplot(x, main="iris features")
 
 ## class label distributions
-plot(Y)
+plot(y)
 
 ## feature-class plots
 featurePlot(x=x, y=y, plot="ellipse")
