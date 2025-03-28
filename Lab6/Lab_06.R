@@ -9,7 +9,7 @@ library(caret)
 library(cv)
 
 ## read data
-NY_House_Dataset <- read_csv("NY-House-Dataset.csv")
+NY_House_Dataset <- read_csv("C:/Users/oujia/Downloads/NY-House-Dataset (1).csv")
 
 dataset <- NY_House_Dataset
 
@@ -222,3 +222,57 @@ mean(rmse)
 
 
 #### THE END ####
+
+
+##Train and evaluate 3 regression models predicting price from square footage using the MAE, MSE and RMSE metrics##
+
+library(rpart)
+library(randomForest)
+
+dataset_new <- subset(dataset, !is.na(PRICE) & !is.na(PROPERTYSQFT) & PRICE > 0 & PROPERTYSQFT > 0, select = c(PRICE, PROPERTYSQFT))
+
+
+# Visualize data
+ggplot(dataset_new, aes(x = PROPERTYSQFT, y = PRICE)) +
+  geom_point(alpha = 0.5) +
+  xlim(0, 10000) +
+  ylim(0, 1e8) +
+  labs(title = 'Square Footage vs. Price', x = 'Square Footage', y = 'Price')
+
+
+set.seed(42)
+trainIndex <- createDataPartition(dataset_new$PRICE, p = 0.8, list = FALSE)
+trainData <- dataset_new[trainIndex, ]
+testData <- dataset_new[-trainIndex, ]
+
+#Linear Regression model
+lin_model <- lm(PRICE ~ PROPERTYSQFT, data = trainData)
+lin_preds <- predict(lin_model, testData)
+summary(lin_model)
+
+#Decision Tree model
+dt_model <- rpart(PRICE ~ PROPERTYSQFT, data = trainData)
+dt_preds <- predict(dt_model, testData)
+summary(dt_model)
+
+#Random Forest model
+rf_model <- randomForest(PRICE ~ PROPERTYSQFT, data = trainData)
+rf_preds <- predict(rf_model, testData)
+
+# Evaluate models
+evaluate_model <- function(true, pred) {
+  mae <- mean(abs(true - pred))
+  mse <- mean((true - pred)^2)
+  rmse <- sqrt(mse)
+  return(c(MAE = mae, MSE = mse, RMSE = rmse))
+}
+
+lm_metrics <- evaluate_model(testData$PRICE, lm_preds)
+dt_metrics <- evaluate_model(testData$PRICE, dt_preds)
+rf_metrics <- evaluate_model(testData$PRICE, rf_preds)
+
+# Print results
+cat('Linear Regression Metrics:', lm_metrics, '\n')
+cat('Decision Tree Metrics:', dt_metrics, '\n')
+cat('Random Forest Metrics:', rf_metrics, '\n')
+
